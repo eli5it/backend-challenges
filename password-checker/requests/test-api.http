@@ -1,0 +1,22 @@
+
+POST http://localhost:3000/check-password
+Content-Type: application/json
+
+{
+  "password": "strongpassword123"
+}
+
+### Check Invalid Password (too short)
+POST http://localhost:3000/check-password
+Content-Type: application/json
+
+{
+  "password": "weak"
+}
+
+### Check Missing Password
+POST http://localhost:3000/check-password
+Content-Type: application/json
+
+{
+}
