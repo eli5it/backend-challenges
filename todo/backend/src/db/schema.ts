@@ -7,6 +7,7 @@ import {
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const todoTable = pgTable("todos", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -23,14 +24,20 @@ export const todoTable = pgTable("todos", {
   isCompleted: boolean().default(false).notNull(),
 });
 
-export const userTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-  username: varchar({ length: 255 }).notNull(),
-});
+export const userTable = pgTable(
+  "users",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    username: varchar({ length: 20 }).notNull(),
+  },
+  (table) => ({
+    usernameLengthCheck: sql`char_length(${table.username}) >= 3`,
+  })
+);
 
 export type InsertUser = typeof userTable.$inferInsert;

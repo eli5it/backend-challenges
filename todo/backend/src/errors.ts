@@ -13,3 +13,17 @@ export class BadRequestError extends AppError {
     this.name = "BadRequestError";
   }
 }
+
+export class DBInputError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DBInputError";
+  }
+}
+
+export class DBUnexpectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DBUnexpectedError";
+  }
+}
