@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createUserValidator } from "../validators/users";
 import z from "zod";
-import { BadRequestError } from "../errors";
+import { BadRequestError, DBInputError } from "../errors";
 import { createUser as createDbUser } from "../db/queries/users";
 
 export async function createUser(req: Request, res: Response) {
@@ -12,6 +12,9 @@ export async function createUser(req: Request, res: Response) {
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {
       throw new BadRequestError("Please provide a username");
+    }
+    if (err instanceof DBInputError) {
+      throw new BadRequestError(err.message);
     }
     throw err;
   }
