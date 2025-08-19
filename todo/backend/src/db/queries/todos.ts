@@ -21,6 +21,11 @@ export async function createTodo(todoData: InsertTodo) {
     if (err instanceof DrizzleQueryError) {
       const cause = err.cause as PostgresError | undefined;
       if (cause) {
+        if (cause.code === "23503") {
+          throw new DBInputError(
+            `User with id ${todoData.userId} does not exist in the db.`
+          );
+        }
       }
     }
 
@@ -44,11 +49,16 @@ export async function updateTodo(todoData: InsertTodo) {
 
     return updatedTodo;
   } catch (err: unknown) {
-    throw new DBUnexpectedError("Could not update todo");
+    if (err instanceof DrizzleQueryError) {
+      const cause = err.cause as PostgresError | undefined;
+      if (cause) {
+        console.log(cause);
+      }
+    }
   }
 }
 
 export async function getTodos() {
-  const todos = await db.select().from(todoTable);
+  const todos = await db.select().from(todoTable).orderBy(todoTable.dueDate);
   return todos;
 }
