@@ -23,7 +23,12 @@ export async function createUser(userData: InsertUser) {
         }
         if (cause.code === "23514") {
           throw new DBInputError(
-            "Username length must be between 4 and 30 characters"
+            "Username length must be between 4 and 20 characters"
+          );
+        }
+        if (cause.code === "22001") {
+          throw new DBInputError(
+            "Username length must be between 4 and 20 characters"
           );
         }
       }

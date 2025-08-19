@@ -25,5 +25,19 @@ describe("POST /users", () => {
     });
 
     expect(res.status).toBe(400);
+    expect(res.body.message).toBe(
+      "User with username Elijah already exists in the database."
+    );
+  });
+  test("Users with invalid username lengths cannot be created", async () => {
+    const res1 = await api.post("/api/users").send({
+      username: "El",
+    });
+    const res2 = await api.post("/api/users").send({
+      username: "Elfdafdafdafdsafdafdsafdafdsf",
+    });
+
+    expect(res1.status).toBe(400);
+    expect(res2.status).toBe(400);
   });
 });
