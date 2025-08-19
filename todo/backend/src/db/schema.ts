@@ -40,3 +40,4 @@ export const userTable = pgTable(
 );
 
 export type InsertUser = typeof userTable.$inferInsert;
+export type InsertTodo = typeof todoTable.$inferInsert;
