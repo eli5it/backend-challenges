@@ -6,6 +6,7 @@ import {
   varchar,
   timestamp,
   boolean,
+  check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -33,11 +34,9 @@ export const userTable = pgTable(
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
-    username: varchar({ length: 20 }).notNull(),
+    username: varchar({ length: 20 }).notNull().unique(),
   },
-  (table) => ({
-    usernameLengthCheck: sql`char_length(${table.username}) >= 3`,
-  })
+  (table) => [check("username_check", sql`LENGTH(${table.username}) > 3`)]
 );
 
 export type InsertUser = typeof userTable.$inferInsert;
