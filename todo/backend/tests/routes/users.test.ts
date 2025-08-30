@@ -3,6 +3,12 @@ import { createUser } from "../../src/db/queries/users";
 import { DBInputError } from "../../src/errors";
 import request from "supertest";
 import { app } from "../../src/server";
+import { beforeEach } from "vitest";
+import { db } from "../../src/db";
+
+beforeEach(async () => {
+  await db.execute(`TRUNCATE TABLE users RESTART IDENTITY CASCADE;`);
+});
 
 const api = request(app);
 
