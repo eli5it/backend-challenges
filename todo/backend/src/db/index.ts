@@ -9,3 +9,5 @@ export const db = drizzle({
         : process.env.DEV_DATABASE_URL!,
   },
 });
+
+export const client = null;

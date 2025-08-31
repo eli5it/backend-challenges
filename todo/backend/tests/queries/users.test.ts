@@ -8,14 +8,28 @@ describe("Create User", () => {
     expect(newUser.username).toBe("Elijah");
   });
   test("A user with length < 3 cannot be created", async () => {
-    await expect(createUser({ username: "El" })).rejects.toBeInstanceOf(
-      DBInputError
+    await expect(async () => {
+      await createUser({ username: "El" });
+    }).rejects.toEqual(
+      expect.objectContaining({
+        message: "Username length must be between 4 and 20 characters",
+        name: "DBInputError",
+      })
     );
   });
   test("Duplicate users are handled appropriately", async () => {
-    await createUser({ username: "Schmeli" });
-    await expect(createUser({ username: "Schmeli" })).rejects.toBeInstanceOf(
-      DBInputError
+    // First creation should succeed
+    const firstUser = await createUser({ username: "Schmeli" });
+    expect(firstUser.username).toBe("Schmeli");
+
+    // Second creation should fail with specific error
+    await expect(async () => {
+      await createUser({ username: "Schmeli" });
+    }).rejects.toEqual(
+      expect.objectContaining({
+        message: "User with username Schmeli already exists in the database.",
+        name: "DBInputError",
+      })
     );
   });
 });

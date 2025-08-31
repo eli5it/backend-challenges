@@ -55,12 +55,13 @@ export async function updateTodo(req: Request, res: Response) {
 
 export async function deleteTodo(req: Request, res: Response) {
   const todoId = parseInt(req.params.todoId);
-  if (!isNaN(todoId)) {
+  if (isNaN(todoId)) {
     throw new BadRequestError("Invalid todo id provided");
   }
 
   try {
     await deleteDbTodo(todoId);
+    return res.status(204).send();
   } catch (err) {
     throw new Error("something went wrong");
   }

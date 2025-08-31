@@ -11,7 +11,7 @@
     "db:push": "npx drizzle-kit push",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
-    "test": "NODE_ENV=test vitest run",
+    "test": "NODE_ENV=test vitest run --sequence.concurrent=false",
     "test:coverage": "NODE_ENV=testvitest run --coverage"
   },
   "keywords": [
@@ -22,6 +22,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@electric-sql/pglite": "^0.3.7",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "express": "^5.1.0",
