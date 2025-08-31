@@ -1,42 +1,76 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  background-color: white;
+  min-height: 100vh;
+  min-width: 100%;
+  color: black;
+}
+
+:root {
+  --primary-blue: #137fec;
+  --primary-gray: #f9fafb;
+  --border-dark-gray: #d1d5db;
+}
+
+header {
+  border-bottom: 1px solid var(--border-dark-gray);
+  padding: 0.4rem 0 0.4rem 0;
+}
+
+main {
+  background-color: var(--primary-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.text-center {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.bold {
+  font-weight: bold;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text-header {
+  font-size: 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.bg-white {
+  background-color: white;
 }
 
-.card {
-  padding: 2em;
+.submit-button {
+  background-color: var(--primary-blue);
 }
 
-.read-the-docs {
-  color: #888;
+.todo-form {
+  margin: 1rem 0 1rem 0;
+  position: relative;
+}
+
+.todo-form input {
+  border-radius: 8px;
+  border: 1px solid var(--border-dark-gray);
+  padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+}
+
+.todo-form button {
+  height: 80%;
+  aspect-ratio: 1 /1;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 3px;
+  top: 3px;
 }
