@@ -1,9 +1,6 @@
 import { describe, expect, test } from "vitest";
 import request from "supertest";
 import { app } from "../../src/server";
-import { InsertTodo } from "../../src/db/schema";
-import { createUser } from "../../src/db/queries/users";
-import { createTodo } from "../../src/db/queries/todos";
 
 const api = request(app);
 
@@ -58,7 +55,3 @@ describe("DELETE /:todoId", () => {
     expect(res.status).toBe(204);
   });
 });
-
-// describe("PUT /:todoId", () => {});
-
-// describe("GET /todos", () => {});
