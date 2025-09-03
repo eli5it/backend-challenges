@@ -2,5 +2,5 @@ POST http://localhost:8008/api/users
 Content-Type: application/json
 
 {
-    "username": "j"
+    "username": "jello"
 }
