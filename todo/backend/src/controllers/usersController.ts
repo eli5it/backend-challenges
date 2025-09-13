@@ -19,3 +19,5 @@ export async function createUser(req: Request, res: Response) {
     throw err;
   }
 }
+
+export async function loginuser(req: Request, res: Response) {}

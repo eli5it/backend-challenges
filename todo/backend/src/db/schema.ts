@@ -35,6 +35,7 @@ export const userTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
     username: varchar({ length: 20 }).notNull().unique(),
+    passwordHash: varchar({ length: 255 }).notNull(),
   },
   (table) => [check("username_check", sql`LENGTH(${table.username}) > 3`)]
 );
