@@ -72,3 +72,7 @@ h1 {
 .bold {
   font-weight: bold;
 }
+
+.user-header {
+  font-size: 24px;
+}
