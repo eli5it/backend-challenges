@@ -14,6 +14,14 @@ export class BadRequestError extends AppError {
   }
 }
 
+export class UnauthorizedError extends AppError {
+  constructor(message: string) {
+    super(message, 401);
+    this.statusCode = 401;
+    this.name = "UnauthorizedError";
+  }
+}
+
 export class DBInputError extends Error {
   constructor(message: string) {
     super(message);

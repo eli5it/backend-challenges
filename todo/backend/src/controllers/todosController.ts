@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createTodoValidator } from "../validators/todos";
 import z from "zod";
-import { BadRequestError, DBInputError } from "../errors";
+import { BadRequestError, DBInputError, UnauthorizedError } from "../errors";
 import {
   createTodo as createDbTodo,
   deleteTodo as deleteDbTodo,
@@ -11,8 +11,12 @@ import {
 
 export async function createTodo(req: Request, res: Response) {
   try {
+    const user = req.user;
+    if (!user) {
+      throw new UnauthorizedError("Unauthorized");
+    }
     const newTodoData = createTodoValidator.parse(req.body);
-    const todo = await createDbTodo(newTodoData);
+    const todo = await createDbTodo({ ...newTodoData, userId: user.id });
     return res.status(201).json(todo);
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {

@@ -2,7 +2,7 @@ import { db } from "..";
 import { DBInputError, DBUnexpectedError } from "../../errors";
 import { type InsertUser } from "../schema";
 import { userTable } from "../schema";
-import { DrizzleQueryError } from "drizzle-orm";
+import { DrizzleQueryError, eq } from "drizzle-orm";
 import type { DatabaseError as PostgresError } from "pg";
 export async function createUser(userData: InsertUser) {
   try {
@@ -39,6 +39,14 @@ export async function createUser(userData: InsertUser) {
     console.error(err);
     throw new DBUnexpectedError("Something went wrong");
   }
+}
+
+export async function getUserByUsername(username: string) {
+  const [user] = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.username, username));
+  return user;
 }
 
 export async function deleteUsers() {
