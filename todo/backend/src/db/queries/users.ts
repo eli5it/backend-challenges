@@ -8,7 +8,10 @@ export async function createUser(userData: InsertUser) {
   try {
     const [newUser] = await db
       .insert(userTable)
-      .values({ username: userData.username })
+      .values({
+        username: userData.username,
+        passwordHash: userData.passwordHash,
+      })
       .returning();
 
     return newUser;
@@ -33,7 +36,7 @@ export async function createUser(userData: InsertUser) {
         }
       }
     }
-
+    console.error(err);
     throw new DBUnexpectedError("Something went wrong");
   }
 }

@@ -9,7 +9,10 @@ describe("Create todo", () => {
   const tommorow = new Date();
   tommorow.setDate(today.getDate() + 1);
   test("A valid todo can be created succesfully", async () => {
-    const newUser = await createUser({ username: "Elijah2" });
+    const newUser = await createUser({
+      username: "Elijah2",
+      passwordHash: "password",
+    });
 
     const todoData: InsertTodo = {
       userId: newUser.id,
@@ -33,6 +36,7 @@ describe("Delete todo", () => {
   test("A todo can be deleted succesfully", async () => {
     const newUser = await createUser({
       username: "Elijah23",
+      passwordHash: "password",
     });
     const newTodo = await createTodo({
       content: "Example",
@@ -55,7 +59,10 @@ describe("Get Todos", () => {
     tommorow.setDate(today.getDate() + 1);
     nextDay.setDate(tommorow.getDate() + 1);
 
-    const newUser = await createUser({ username: "Schmeli2" });
+    const newUser = await createUser({
+      username: "Schmeli2",
+      passwordHash: "password",
+    });
     const todo1 = await createTodo({
       content: "Todo 1",
       userId: newUser.id,

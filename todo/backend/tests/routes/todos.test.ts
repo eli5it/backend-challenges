@@ -9,6 +9,7 @@ describe("POST /todos", () => {
     // Create user through API to ensure proper transaction handling
     const userRes = await api.post("/api/users").send({
       username: "Elijah2",
+      passwordHash: "passwerdHash",
     });
     expect(userRes.status).toBe(201);
     const user = userRes.body;

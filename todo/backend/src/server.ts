@@ -1,8 +1,9 @@
 import express from "express";
-import usersRouter from "./routes/users";
+import usersRouter from "./routes/auth";
 import todosRouter from "./routes/todos";
 import { errorHandler } from "./middleware/errorHandler";
 import path from "path";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
@@ -12,14 +13,12 @@ app.use(express.static(frontendPath));
 
 app.use(express.json());
 
-app.use("/api/users", usersRouter);
+app.use("/api/auth", usersRouter);
 app.use("/api/todos", todosRouter);
 
 // client-side handling of unknown routes
 app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
-
-console.log(path.join(frontendPath, "index.html"));
 
 app.use(errorHandler);

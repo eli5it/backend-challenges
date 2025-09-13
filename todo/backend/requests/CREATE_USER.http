@@ -1,6 +1,7 @@
-POST http://localhost:8008/api/users
+POST http://localhost:8008/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "jello"
+    "username": "jello",
+    "password": "guhkers"
 }
