@@ -6,11 +6,13 @@ const api = request(app);
 
 describe("POST /todos", () => {
   test("A valid todo can be created successfully", async () => {
-    // Create user through API to ensure proper transaction handling
-    const userRes = await api.post("/api/users").send({
+    const userRes = await api.post("/api/auth/register").send({
       username: "Elijah2",
-      passwordHash: "passwerdHash",
+      password: "password",
     });
+
+    // Extract cookies from registration response
+    const cookies = userRes.headers["set-cookie"];
     expect(userRes.status).toBe(201);
     const user = userRes.body;
     expect(user.id).toBeDefined();
@@ -24,8 +26,11 @@ describe("POST /todos", () => {
       isCompleted: false,
     };
 
-    const res = await api.post("/api/todos").send(newTodo);
-
+    // Set cookies for authentication
+    const res = await api
+      .post("/api/todos")
+      .set("Cookie", cookies)
+      .send(newTodo);
     expect(res.status).toBe(201);
     expect(res.body.content).toBe("Do stuff");
     expect(res.body.userId).toBe(user.id);
@@ -36,23 +41,30 @@ describe("POST /todos", () => {
 describe("DELETE /:todoId", () => {
   test("Deletion of todos works properly", async () => {
     // Create a user first through the API to ensure proper setup
-    const userResponse = await api.post("/api/users").send({
+    const userResponse = await api.post("/api/auth/register").send({
       username: "Elijah234",
+      password: "Guhfs",
     });
     expect(userResponse.status).toBe(201);
     const userId = userResponse.body.id;
+    const cookies = userResponse.headers["set-cookie"];
 
     // Create todo through API
-    const todoResponse = await api.post("/api/todos").send({
-      content: "Do stuff",
-      dueDate: new Date().toISOString(),
-      userId: userId,
-      isCompleted: false,
-    });
+    const todoResponse = await api
+      .post("/api/todos")
+      .set("Cookie", cookies)
+      .send({
+        content: "Do stuff",
+        dueDate: new Date().toISOString(),
+        userId: userId,
+        isCompleted: false,
+      });
     expect(todoResponse.status).toBe(201);
 
     // Delete the todo
-    const res = await api.delete(`/api/todos/${todoResponse.body.id}`);
+    const res = await api
+      .delete(`/api/todos/${todoResponse.body.id}`)
+      .set("Cookie", cookies);
     expect(res.status).toBe(204);
   });
 });

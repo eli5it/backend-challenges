@@ -44,7 +44,7 @@ describe("Delete todo", () => {
       dueDate: new Date(),
     });
     await deleteTodo(newTodo.id);
-    const allTodos = await getTodos();
+    const allTodos = await getTodos(newUser.id);
     const containsNewTodo = allTodos.some((todo) => todo.id === newTodo.id);
 
     expect(containsNewTodo).toBe(false);
@@ -79,7 +79,7 @@ describe("Get Todos", () => {
       dueDate: new Date(),
     });
 
-    const allTodos = await getTodos();
+    const allTodos = await getTodos(newUser.id);
     expect(allTodos[0].content).toBe(todo1.content);
     expect(allTodos[1].content).toBe(todo2.content);
     expect(allTodos[2].content).toBe(todo3.content);

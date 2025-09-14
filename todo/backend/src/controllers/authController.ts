@@ -16,6 +16,17 @@ export async function registerUser(req: Request, res: Response) {
 
     const newUserData = { username, passwordHash };
     const user = await createDbUser(newUserData);
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+      expiresIn: "15m",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
     return res.status(201).json(user);
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {
