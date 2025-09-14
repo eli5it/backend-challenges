@@ -1,19 +1,17 @@
 import { useAuth } from "../hooks/useAuth";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet } from "react-router";
+import { Navigate } from "react-router";
 
 function AuthLayout() {
   const { data: user, isLoading, isError } = useAuth();
-  const navigate = useNavigate();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <></>;
   }
-
   if (isError || !user) {
-    navigate("/login");
+    <Navigate to="/login" replace />;
   }
 
-  // If the user is logged in, render the child routes
   return <Outlet />;
 }
 
