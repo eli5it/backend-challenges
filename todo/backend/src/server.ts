@@ -14,14 +14,14 @@ app.use(express.static(frontendPath));
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(authHandler);
 
 app.use("/api/auth", usersRouter);
 app.use("/api/todos", todosRouter);
+
+app.use(errorHandler);
 
 // client-side handling of unknown routes
 app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
-
-app.use(errorHandler);
-app.use(authHandler);

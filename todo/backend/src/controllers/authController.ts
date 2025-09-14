@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createUserValidator } from "../validators/users";
 import z from "zod";
-import { BadRequestError, DBInputError } from "../errors";
+import { BadRequestError, DBInputError, UnauthorizedError } from "../errors";
 import {
   createUser as createDbUser,
   getUserByUsername,
@@ -31,7 +31,6 @@ export async function registerUser(req: Request, res: Response) {
 export async function loginUser(req: Request, res: Response) {
   try {
     const { username, password } = createUserValidator.parse(req.body);
-    const passwordHash = await bcrypt.hash(password, 10);
     const existingUser = await getUserByUsername(username);
     const validCredentials =
       existingUser &&
@@ -62,4 +61,14 @@ export async function loginUser(req: Request, res: Response) {
 
     throw err;
   }
+}
+
+export async function validateUser(req: Request, res: Response) {
+  if (!req.user) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  return res.status(200).json({
+    user: req.user,
+  });
 }
