@@ -76,3 +76,7 @@ h1 {
 .user-header {
   font-size: 24px;
 }
+
+a {
+  color: var(--primary-blue);
+}
