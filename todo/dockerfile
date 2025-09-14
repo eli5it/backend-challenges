@@ -29,4 +29,4 @@ COPY --from=build /app/frontend/dist ./backend/public
 
 
 EXPOSE 8008
-CMD ["npm", "start", "--prefix", "backend"]
+CMD ["sh", "-c", "cd backend && npm run db:push && npm start"]
