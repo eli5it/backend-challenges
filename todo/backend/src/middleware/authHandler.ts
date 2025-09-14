@@ -16,6 +16,7 @@ export function authHandler(req: Request, res: Response, next: NextFunction) {
     } catch (err) {
       throw new UnauthorizedError("Invalid token");
     }
+  } else {
+    next();
   }
-  next();
 }

@@ -22,6 +22,14 @@ export class UnauthorizedError extends AppError {
   }
 }
 
+export class NotFoundError extends AppError {
+  constructor(message: string) {
+    super(message, 404);
+    this.statusCode = 404;
+    this.name = "UnauthorizedError";
+  }
+}
+
 export class DBInputError extends Error {
   constructor(message: string) {
     super(message);

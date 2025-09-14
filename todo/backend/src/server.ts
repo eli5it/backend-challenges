@@ -22,6 +22,6 @@ app.use("/api/todos", todosRouter);
 app.use(errorHandler);
 
 // client-side handling of unknown routes
-app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
-});
+// app.get(/(.*)/, (req, res) => {
+//   res.sendFile(path.join(frontendPath, "index.html"));
+// });

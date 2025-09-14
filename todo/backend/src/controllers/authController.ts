@@ -38,11 +38,9 @@ export async function loginUser(req: Request, res: Response) {
     if (!validCredentials) {
       throw new BadRequestError("Invalid credentials");
     }
-    const token = jwt.sign(
-      { userId: existingUser.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: "15m" }
-    );
+    const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET!, {
+      expiresIn: "15m",
+    });
 
     res.cookie("token", token, {
       httpOnly: true,

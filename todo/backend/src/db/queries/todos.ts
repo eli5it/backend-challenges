@@ -1,5 +1,5 @@
 import { db } from "..";
-import { DBInputError, DBUnexpectedError } from "../../errors";
+import { DBInputError, DBUnexpectedError, NotFoundError } from "../../errors";
 import { todoTable, type InsertTodo } from "../schema";
 import { DrizzleQueryError, eq } from "drizzle-orm";
 import type { DatabaseError as PostgresError } from "pg";
@@ -58,7 +58,19 @@ export async function updateTodo(todoData: InsertTodo) {
   }
 }
 
-export async function getTodos() {
-  const todos = await db.select().from(todoTable).orderBy(todoTable.dueDate);
+export async function getTodos(userId: number) {
+  const todos = await db
+    .select()
+    .from(todoTable)
+    .where(eq(todoTable.userId, userId))
+    .orderBy(todoTable.dueDate);
   return todos;
+}
+
+export async function getTodoById(todoId: number) {
+  const [todo] = await db
+    .select()
+    .from(todoTable)
+    .where(eq(todoTable.id, todoId));
+  return todo;
 }

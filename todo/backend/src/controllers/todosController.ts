@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { createTodoValidator } from "../validators/todos";
 import z from "zod";
-import { BadRequestError, DBInputError, UnauthorizedError } from "../errors";
+import {
+  BadRequestError,
+  DBInputError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors";
 import {
   createTodo as createDbTodo,
   deleteTodo as deleteDbTodo,
   updateTodo as updateDbTodo,
   getTodos as getDbTodos,
+  getTodoById,
 } from "../db/queries/todos";
 
 export async function createTodo(req: Request, res: Response) {
@@ -20,10 +26,7 @@ export async function createTodo(req: Request, res: Response) {
     return res.status(201).json(todo);
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {
-      const errorMessages = err.format();
-      throw new BadRequestError(
-        `Validation failed: ${JSON.stringify(errorMessages)}`
-      );
+      throw new BadRequestError(`Validation failed: ${JSON.stringify(err)}`);
     }
     if (err instanceof DBInputError) {
       throw new BadRequestError(err.message);
@@ -33,8 +36,14 @@ export async function createTodo(req: Request, res: Response) {
 }
 
 export async function updateTodo(req: Request, res: Response) {
+  if (!req.user) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
   const todoId = parseInt(req.params.todoId);
-  if (!isNaN(todoId)) {
+  const todoToUpdate = todoId ? await getTodoById(todoId) : null;
+  const validId = todoToUpdate?.userId === req.user.id;
+  if (validId) {
     throw new BadRequestError("Invalid todo id provided");
   }
 
@@ -44,10 +53,7 @@ export async function updateTodo(req: Request, res: Response) {
     return res.json(updatedTodo);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const errorMessages = err.format();
-      throw new BadRequestError(
-        `Validation failed: ${JSON.stringify(errorMessages)}`
-      );
+      throw new BadRequestError(`Validation failed: ${JSON.stringify(err)}`);
     }
 
     if (err instanceof DBInputError) {
@@ -64,6 +70,15 @@ export async function deleteTodo(req: Request, res: Response) {
   }
 
   try {
+    const todoToDelete = await getTodoById(todoId);
+    if (!todoToDelete) {
+      throw new NotFoundError(`Could not find todo with id ${todoId}`);
+    }
+
+    if (todoToDelete?.userId !== req.user?.id) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
     await deleteDbTodo(todoId);
     return res.status(204).send();
   } catch (err) {
@@ -72,6 +87,11 @@ export async function deleteTodo(req: Request, res: Response) {
 }
 
 export async function getTodos(req: Request, res: Response) {
-  const todos = await getDbTodos();
+  const user = req?.user;
+  if (!user) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  const todos = await getDbTodos(user.id);
   return res.json(todos);
 }
